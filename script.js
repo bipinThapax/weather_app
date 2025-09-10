@@ -10,17 +10,17 @@ async function getWeather(city) {
 
     try {
         const response = await fetch(apiUrl)
-        if (!response.ok) {
-            console.log("Response not working")
-            return;
-        }
         let data = await response.json()
+        if (!response.ok) {
+            userReqHandle()
+        } else {
 
-        // updating weather information name,temp,humidity,windspeed
-        cityName.innerHTML = data.name
-        temp.innerHTML = data.main.temp + "&deg; C"
-        humidity.innerHTML = data.main.humidity + "%"
-        windspeed.innerHTML = data.wind.speed + "km/h"
+            // updating weather information name,temp,humidity,windspeed
+            cityName.innerHTML = data.name
+            temp.innerHTML = data.main.temp + "&deg; C"
+            humidity.innerHTML = data.main.humidity + " %"
+            windspeed.innerHTML = data.wind.speed + " m/s"
+        }
 
         // assigning weather image according to weather descripiton
         const weatherCond = {
@@ -41,11 +41,15 @@ async function getWeather(city) {
     }
 }
 
-// displaying pokhara weather at first 
-for (let index = 1; index < 2; index++) {
-    getWeather("Pokhara")
-
+// handle unavailable city 
+function userReqHandle() {
+    cityName.innerHTML = " City not found !"
+    temp.innerHTML = "-- C"
+    humidity.innerHTML = "- %"
+    windspeed.innerHTML = "- m/s"
+    weatherIcon.src = "./images/sun.png";
 }
+
 
 let input = document.querySelector(".search-bar input")
 let search = document.querySelector(".search-bar .search-icon")
@@ -53,10 +57,8 @@ let search = document.querySelector(".search-bar .search-icon")
 
 // function to handle search to load Weather information
 function handleSearch() {
-    if (input.value == "") {
-        console.log("Value cannot be empty")
-    } else if (!isNaN(input.value)) {
-        console.log("Value cannot be number")
+    if (input.value == "" || !isNaN(input.value)) {
+        userReqHandle()
     } else {
         getWeather(input.value)
     }
@@ -71,4 +73,9 @@ input.addEventListener("keypress", (e) => {
     if (e.key === "Enter") {
         handleSearch()
     }
+})
+
+// displaying pokhara weather by default 
+window.addEventListener("DOMContentLoaded", () => {
+    getWeather("Pokhara")
 })
