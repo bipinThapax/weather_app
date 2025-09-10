@@ -23,41 +23,52 @@ async function getWeather(city) {
         windspeed.innerHTML = data.wind.speed + "km/h"
 
         // assigning weather image according to weather descripiton
-        let weather = data.weather[0].description
-        if (weather.includes("clear")) {
-            // sunny
-            weatherIcon.src = "./images/sun.png"
+        const weatherCond = {
+            "clear sky": "./images/sun.png",
+            "overcast clouds": "./images/cloudy.png",
+            "broken clouds": "./images/cloudy.png",
+            "few clouds": "./images/cloudSunRising.png",
+            "scattered clouds": "./images/cloudSunRising.png",
+            "heavy rain": "./images/rainy.png",
+            "light rain": "./images/sunAndRain.png",
+            "moderate rain": "./images/sunAndRain.png"
         }
-        else if (weather.includes("overcast") || weather.includes("broken")) {
-            // cloudy
-            weatherIcon.src = "./images/cloudy.png"
-        } else if (weather.includes("few") || weather.includes("scattered")) {
-            // sunny cloudy
-            weatherIcon.src = "./images/cloudSunRising.png"
-        } else if (weather.includes("heavy rain")) {
-            // heavy rain
-            weatherIcon.src = "./images/rainy.png"
-        } else if (weather.includes("rain")) {
-            // light rainy
-            weatherIcon.src = "./images/sunAndRain.png"
-        }
+        let weather = data.weather[0].description.toLowerCase();
+        weatherIcon.src = weatherCond[weather] || "./images/sun.png";
 
     } catch (error) {
         console.log("fetch error:", error)
     }
 }
 
+// displaying pokhara weather at first 
+for (let index = 1; index < 2; index++) {
+    getWeather("Pokhara")
+
+}
+
 let input = document.querySelector(".search-bar input")
 let search = document.querySelector(".search-bar .search-icon")
 
-// event listener to search icon and getWeather info
-search.addEventListener("click", () => {
+
+// function to handle search to load Weather information
+function handleSearch() {
     if (input.value == "") {
         console.log("Value cannot be empty")
-    } else if (input.value.includes(Number)) {
+    } else if (!isNaN(input.value)) {
         console.log("Value cannot be number")
     } else {
         getWeather(input.value)
-        input.value = ""
+    }
+    input.value = ""
+}
+
+// event listener to search icon 
+search.addEventListener("click", handleSearch)
+
+// add Event listener to enter key 
+input.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") {
+        handleSearch()
     }
 })

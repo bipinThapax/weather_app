@@ -38,11 +38,11 @@ body {
 }
 
 .search-bar input {
-  padding: 0.8rem 1rem;
+  padding: 0.8rem 1.5rem;
   border: none;
   outline: none;
   font-size: 1.6rem;
-  border-radius: 1rem;
+  border-radius: 2rem;
   margin-right: 0.85rem;
 }
 .search-bar .search-icon {
